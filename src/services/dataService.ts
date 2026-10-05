@@ -832,15 +832,35 @@ export async function submitContact(data: { name: string; phone: string; email?:
 // ------------------------------------------------------------------------------
 // THEME, SEO, ANALYTICS, NAVIGATION
 // ------------------------------------------------------------------------------
+const THEME_CACHE_KEY = 'bright-okeyson-theme-settings';
+
 export async function getThemeSettings(): Promise<ThemeSettings> {
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data, error } = await supabase.from('theme_settings').select('*').limit(1).maybeSingle();
-      if (!error && data) return data as ThemeSettings;
+      const { data, error } = await supabase
+        .from('theme_settings')
+        .select('*')
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!error && data) {
+        const theme = data as ThemeSettings;
+        try { localStorage.setItem(THEME_CACHE_KEY, JSON.stringify(theme)); } catch {}
+        return theme;
+      }
+
+      if (error) console.error('Supabase getThemeSettings error:', error.message);
     } catch (e) {
       console.error('Supabase theme exception:', e);
     }
   }
+
+  try {
+    const cached = localStorage.getItem(THEME_CACHE_KEY);
+    if (cached) return JSON.parse(cached) as ThemeSettings;
+  } catch {}
+
   return INITIAL_THEME;
 }
 
@@ -864,7 +884,11 @@ export async function updateThemeSettings(theme: Partial<ThemeSettings>): Promis
           .maybeSingle();
 
         if (error) throw new Error(error.message);
-        if (data) return data as ThemeSettings;
+        if (data) {
+          const savedTheme = data as ThemeSettings;
+          try { localStorage.setItem(THEME_CACHE_KEY, JSON.stringify(savedTheme)); } catch {}
+          return savedTheme;
+        }
       } else {
         const { data, error } = await supabase
           .from('theme_settings')
@@ -873,7 +897,11 @@ export async function updateThemeSettings(theme: Partial<ThemeSettings>): Promis
           .single();
 
         if (error) throw new Error(error.message);
-        if (data) return data as ThemeSettings;
+        if (data) {
+          const savedTheme = data as ThemeSettings;
+          try { localStorage.setItem(THEME_CACHE_KEY, JSON.stringify(savedTheme)); } catch {}
+          return savedTheme;
+        }
       }
     } catch (e) {
       console.error('Supabase theme save exception:', e);
