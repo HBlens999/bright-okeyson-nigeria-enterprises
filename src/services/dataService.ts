@@ -849,9 +849,6 @@ export async function updateThemeSettings(theme: Partial<ThemeSettings>): Promis
 
   if (isSupabaseConfigured && supabase) {
     try {
-      // The local INITIAL_THEME contains a placeholder id that is not a real UUID.
-      // Never send that placeholder to Postgres. If no real row exists, insert
-      // without an id so Supabase generates a valid UUID from the column default.
       const currentId = isValidUUID(current.id) ? current.id : null;
       const payload: Partial<ThemeSettings> = {
         ...theme,
@@ -866,11 +863,8 @@ export async function updateThemeSettings(theme: Partial<ThemeSettings>): Promis
           .select('*')
           .maybeSingle();
 
-        if (error) {
-          console.error('Supabase update theme error:', error.message);
-        } else if (data) {
-          return data as ThemeSettings;
-        }
+        if (error) throw new Error(error.message);
+        if (data) return data as ThemeSettings;
       } else {
         const { data, error } = await supabase
           .from('theme_settings')
@@ -878,23 +872,16 @@ export async function updateThemeSettings(theme: Partial<ThemeSettings>): Promis
           .select('*')
           .single();
 
-        if (error) {
-          console.error('Supabase insert theme error:', error.message);
-        } else if (data) {
-          return data as ThemeSettings;
-        }
+        if (error) throw new Error(error.message);
+        if (data) return data as ThemeSettings;
       }
     } catch (e) {
       console.error('Supabase theme save exception:', e);
+      throw e;
     }
   }
 
-  // Keep the UI responsive even if Supabase is unavailable.
-  return {
-    ...current,
-    ...theme,
-    updated_at: new Date().toISOString()
-  };
+  return { ...current, ...theme, updated_at: new Date().toISOString() };
 }
 
 export async function getSeoSettings(): Promise<SeoSettings> {
