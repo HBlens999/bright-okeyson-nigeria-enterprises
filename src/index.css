@@ -2,12 +2,12 @@
 
 @layer base {
   :root {
-    --color-primary: #dc2626;
-    --color-primary-hover: #b91c1c;
-    --color-secondary: #171717;
-    --color-accent: #ef4444;
-    --color-bg: #0a0a0a;
-    --color-text: #f5f5f5;
+    --color-primary: #E96A0A;
+    --color-primary-hover: #C95700;
+    --color-secondary: #0B2F5B;
+    --color-accent: #1D6FB8;
+    --color-bg: #F4F6F8;
+    --color-text: #142033;
     --app-radius: 0.375rem;
   }
   body {
@@ -36,7 +36,18 @@
   .hover\:border-red-600:hover,
   .hover\:border-red-700:hover,
   .hover\:border-red-800:hover { border-color: var(--color-primary-hover) !important; }
-  .bg-red-950 { background-color: color-mix(in srgb, var(--color-primary) 18%, var(--color-secondary)) !important; }
+  .bg-red-950 { background-color: color-mix(in srgb, var(--color-primary) 10%, white) !important; }
+  .bg-neutral-950 { background-color: #FFFFFF !important; }
+  .bg-neutral-900 { background-color: #F4F6F8 !important; }
+  .bg-neutral-800 { background-color: #E9EEF3 !important; }
+  .bg-black { background-color: #FFFFFF !important; }
+  .text-white { color: var(--color-text) !important; }
+  .text-neutral-100 { color: #1A2940 !important; }
+  .text-neutral-200 { color: #25364D !important; }
+  .text-neutral-300 { color: #40526A !important; }
+  .text-neutral-400 { color: #5E6E83 !important; }
+  .text-neutral-500 { color: #718096 !important; }
+  .border-neutral-700, .border-neutral-800 { border-color: #D5DDE6 !important; }
   .ring-red-600 { --tw-ring-color: var(--color-primary) !important; }
   .rounded { border-radius: var(--app-radius) !important; }
 }
