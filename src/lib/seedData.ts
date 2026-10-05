@@ -512,12 +512,12 @@ export const INITIAL_LANDING_PAGES: LandingPage[] = [
 
 export const INITIAL_THEME: ThemeSettings = {
   id: '5f8f2b7a-7d4c-4f1a-9c2e-3a6b8d1e4f90',
-  primary_color: '#dc2626',
-  primary_hover: '#b91c1c',
-  secondary_color: '#171717',
-  accent_color: '#ef4444',
-  bg_color: '#0a0a0a',
-  text_color: '#f5f5f5',
+  primary_color: '#E96A0A',
+  primary_hover: '#C95700',
+  secondary_color: '#0B2F5B',
+  accent_color: '#1D6FB8',
+  bg_color: '#F4F6F8',
+  text_color: '#142033',
   border_radius: '0.375rem'
 };
 
