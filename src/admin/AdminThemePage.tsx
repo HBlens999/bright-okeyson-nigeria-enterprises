@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { updateThemeSettings } from '../services/dataService';
 import { CheckCircle2, Sparkles } from 'lucide-react';
@@ -8,17 +8,25 @@ export const AdminThemePage: React.FC = () => {
   const [formData, setFormData] = useState(theme);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    setFormData(theme);
+  }, [theme]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setError('');
     try {
-      await updateThemeSettings(formData);
+      const savedTheme = await updateThemeSettings(formData);
+      setFormData(savedTheme);
       await refreshSettings();
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error saving theme settings:', err);
+      setError(err?.message || 'Could not save theme settings. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -34,6 +42,12 @@ export const AdminThemePage: React.FC = () => {
           Customize Dealership Deep Red and Bright Red palettes, border radiuses, and button colors.
         </p>
       </div>
+
+      {error && (
+        <div className="p-3.5 bg-red-950 border border-red-800 rounded flex items-center gap-2 text-red-300 text-xs">
+          <span>{error}</span>
+        </div>
+      )}
 
       {saved && (
         <div className="p-3.5 bg-green-950 border border-green-800 rounded flex items-center gap-2 text-green-300 text-xs">
