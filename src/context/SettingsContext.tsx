@@ -48,7 +48,13 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     }
   };
 
-  useEffect(() => { refreshSettings(); }, []);
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem('bright-okeyson-theme-settings');
+      if (cached) applyThemeVariables(JSON.parse(cached) as ThemeSettings);
+    } catch {}
+    refreshSettings();
+  }, []);
 
   return <SettingsContext.Provider value={{siteSettings, branding, branches, theme, announcement, categories, loading, refreshSettings}}>
     {children}
