@@ -1,0 +1,6 @@
+{
+  "name": "Bright Okeyson Nigeria Enterprises",
+  "description": "Commercial motorcycle dealership and genuine spare parts distributor in Nigeria. Home of All Motorcycle Healing Center.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
