@@ -511,7 +511,7 @@ export const INITIAL_LANDING_PAGES: LandingPage[] = [
 ];
 
 export const INITIAL_THEME: ThemeSettings = {
-  id: 't0000000-0000-0000-0000-000000000001',
+  id: '5f8f2b7a-7d4c-4f1a-9c2e-3a6b8d1e4f90',
   primary_color: '#dc2626',
   primary_hover: '#b91c1c',
   secondary_color: '#171717',
