@@ -5,24 +5,31 @@ const rawUrl =
   (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_URL) ||
   '';
 
-const rawKey =
+const rawPublishableKey =
+  (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY) ||
+  (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_PUBLISHABLE_KEY) ||
+  '';
+
+const rawAnonKey =
   (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) ||
   (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_ANON_KEY) ||
   '';
 
 const supabaseUrl = rawUrl.trim().replace(/^['"]|['"]$/g, '');
-const supabaseAnonKey = rawKey.trim().replace(/^['"]|['"]$/g, '');
+const supabasePublishableKey = rawPublishableKey.trim().replace(/^['"]|['"]$/g, '');
+const supabaseAnonKey = rawAnonKey.trim().replace(/^['"]|['"]$/g, '');
+const supabaseKey = supabasePublishableKey || supabaseAnonKey;
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl &&
-  supabaseAnonKey &&
+  supabaseKey &&
   supabaseUrl.startsWith('https://') &&
-  supabaseAnonKey.length > 20 &&
+  supabaseKey.length > 20 &&
   !supabaseUrl.includes('your-project-ref')
 );
 
 export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+  ? createClient(supabaseUrl, supabaseKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true
@@ -34,6 +41,6 @@ if (typeof window !== 'undefined') {
   if (isSupabaseConfigured) {
     console.info('[Supabase] Initialized successfully with endpoint:', supabaseUrl);
   } else {
-    console.warn('[Supabase] VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY missing or invalid in environment.');
+    console.warn('[Supabase] VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY/VITE_SUPABASE_ANON_KEY missing or invalid in environment.');
   }
 }
