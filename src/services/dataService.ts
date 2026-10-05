@@ -846,17 +846,55 @@ export async function getThemeSettings(): Promise<ThemeSettings> {
 
 export async function updateThemeSettings(theme: Partial<ThemeSettings>): Promise<ThemeSettings> {
   const current = await getThemeSettings();
-  const updated = { ...current, ...theme };
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const { error } = await supabase.from('theme_settings').upsert(updated);
-      if (error) console.error('Supabase update theme error:', error.message);
+      // The local INITIAL_THEME contains a placeholder id that is not a real UUID.
+      // Never send that placeholder to Postgres. If no real row exists, insert
+      // without an id so Supabase generates a valid UUID from the column default.
+      const currentId = isValidUUID(current.id) ? current.id : null;
+      const payload: Partial<ThemeSettings> = {
+        ...theme,
+        updated_at: new Date().toISOString()
+      };
+
+      if (currentId) {
+        const { data, error } = await supabase
+          .from('theme_settings')
+          .update(payload)
+          .eq('id', currentId)
+          .select('*')
+          .maybeSingle();
+
+        if (error) {
+          console.error('Supabase update theme error:', error.message);
+        } else if (data) {
+          return data as ThemeSettings;
+        }
+      } else {
+        const { data, error } = await supabase
+          .from('theme_settings')
+          .insert(payload)
+          .select('*')
+          .single();
+
+        if (error) {
+          console.error('Supabase insert theme error:', error.message);
+        } else if (data) {
+          return data as ThemeSettings;
+        }
+      }
     } catch (e) {
-      console.error('Supabase update theme exception:', e);
+      console.error('Supabase theme save exception:', e);
     }
   }
-  return updated;
+
+  // Keep the UI responsive even if Supabase is unavailable.
+  return {
+    ...current,
+    ...theme,
+    updated_at: new Date().toISOString()
+  };
 }
 
 export async function getSeoSettings(): Promise<SeoSettings> {
