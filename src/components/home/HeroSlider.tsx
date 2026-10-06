@@ -3,12 +3,24 @@ import { Link } from 'react-router-dom';
 import { MessageCircle, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { HeroSlide } from '../../types/database';
 import { getHeroSlides } from '../../services/dataService';
+import initialHeroImage from '../../assets/images/hero_motorcycle_dealership_1791203249649.jpg';
+import secondHeroImage from '../../assets/images/hero_spare_parts_genuine_1791203261040.jpg';
 
 export const HeroSlider: React.FC = () => {
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Start loading the hero artwork immediately, before Supabase responds.
+  useEffect(() => {
+    [initialHeroImage, secondHeroImage].forEach((src) => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.fetchPriority = 'high';
+      image.src = src;
+    });
+  }, []);
 
   useEffect(() => {
     async function load() {
@@ -53,6 +65,24 @@ export const HeroSlider: React.FC = () => {
   const nextSlide = () => {
     goToSlide((currentIndex + 1) % slideCount);
   };
+
+  // Show the first hero image immediately while the CMS data is loading.
+  // This prevents a blank/slow-looking hero on first paint.
+  if (loading && slideCount === 0) {
+    return (
+      <section className="hero-slider relative overflow-hidden min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] bg-brand-navy border-b border-brand-sky">
+        <img
+          src={initialHeroImage}
+          alt="Bright Okeyson Nigeria Enterprises motorcycles"
+          className="hero-slide-image absolute inset-0 w-full h-full object-cover object-center"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          draggable="false"
+        />
+      </section>
+    );
+  }
 
   // Fallback Hero if no slides exist
   if (!loading && slideCount === 0) {
