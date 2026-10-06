@@ -111,6 +111,12 @@
   border-color: #EAF8FC !important;
 }
 
+/* Text that was authored as white for the old dark sections must remain readable
+   after those sections become light brand surfaces. Exclude inline-colored modals. */
+.public-site .bg-neutral-900:not([style]) .text-white {
+  color: #053F5C !important;
+}
+
 /* Legacy red utilities -> brand teal/gold. */
 .public-site .bg-red-700,
 .public-site .bg-red-600,
