@@ -8,7 +8,7 @@ import { CartDrawer } from '../cart/CartDrawer';
 
 export const PublicLayout: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-neutral-950 text-neutral-100">
+    <div className="public-site flex flex-col min-h-screen bg-white text-brand-navy">
       {/* Welcome Announcement Modal */}
       <AnnouncementPopup />
 
