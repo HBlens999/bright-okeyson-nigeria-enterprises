@@ -31,9 +31,9 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-neutral-950/95 backdrop-blur-md border-b border-neutral-800">
+    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200">
       {/* Top Bar Announcement / Contact Strip */}
-      <div className="bg-red-700 text-white text-xs py-1.5 px-4 hidden sm:block">
+      <div className="bg-teal-700 text-white text-xs py-1.5 px-4 hidden sm:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="font-semibold tracking-wide uppercase">BN {siteSettings.registration_number}</span>
@@ -69,10 +69,10 @@ export const Header: React.FC = () => {
               </div>
             )}
             <div className="flex flex-col">
-              <span className="font-extrabold text-base sm:text-lg tracking-tight uppercase text-white font-['Barlow_Condensed'] leading-none">
+              <span className="font-extrabold text-base sm:text-lg tracking-tight uppercase text-slate-900 font-['Barlow_Condensed'] leading-none">
                 {siteSettings.business_name}
               </span>
-              <span className="text-[11px] text-neutral-400 font-medium tracking-wider uppercase mt-0.5 hidden xs:block">
+              <span className="text-[11px] text-slate-500 font-medium tracking-wider uppercase mt-0.5 hidden xs:block">
                 Motorcycle Healing Center
               </span>
             </div>
@@ -87,19 +87,19 @@ export const Header: React.FC = () => {
               to={link.path}
               className={`transition-colors py-1 relative ${
                 isActive(link.path)
-                  ? 'text-red-500 font-semibold'
-                  : 'text-neutral-300 hover:text-white'
+                  ? 'text-teal-700 font-semibold'
+                  : 'text-slate-600 hover:text-teal-700'
               }`}
             >
               {link.label}
               {isActive(link.path) && (
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-red-600 rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600 rounded-full" />
               )}
             </Link>
           ))}
           <Link
             to="/landing"
-            className="text-neutral-400 hover:text-red-400 text-xs uppercase tracking-wider transition-colors px-2 py-1 rounded bg-neutral-900 border border-neutral-800"
+            className="text-slate-500 hover:text-teal-700 text-xs uppercase tracking-wider transition-colors px-2 py-1 rounded bg-slate-50 border border-slate-200"
           >
             Ad Landing
           </Link>
@@ -121,12 +121,12 @@ export const Header: React.FC = () => {
           {/* Cart Trigger */}
           <button
             onClick={() => setIsDrawerOpen(true)}
-            className="relative flex items-center justify-center p-2.5 text-neutral-200 hover:text-white bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 rounded transition-colors"
+            className="relative flex items-center justify-center p-2.5 text-slate-700 hover:text-teal-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded transition-colors"
             aria-label="View Cart"
           >
             <ShoppingBag className="w-5 h-5 text-neutral-300" />
             {totalItemCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-neutral-950 tabular-nums">
+              <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[11px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white tabular-nums">
                 {totalItemCount}
               </span>
             )}
@@ -135,7 +135,7 @@ export const Header: React.FC = () => {
           {/* Admin shortcut icon */}
           <Link
             to="/admin"
-            className="hidden md:flex items-center justify-center p-2 text-neutral-500 hover:text-neutral-300 transition-colors"
+            className="hidden md:flex items-center justify-center p-2 text-slate-500 hover:text-slate-800 transition-colors"
             title="Admin CMS"
             aria-label="Admin CMS"
           >
@@ -145,7 +145,7 @@ export const Header: React.FC = () => {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-neutral-300 hover:text-white bg-neutral-900 rounded border border-neutral-800"
+            className="lg:hidden p-2 text-slate-700 hover:text-teal-700 bg-slate-50 rounded border border-slate-200"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -155,7 +155,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-neutral-800 bg-neutral-950 px-4 pt-3 pb-6 space-y-3">
+        <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
           <div className="flex flex-col space-y-2">
             {navLinks.map((link) => (
               <Link
@@ -164,8 +164,8 @@ export const Header: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
                 className={`px-3 py-2.5 rounded text-sm font-medium ${
                   isActive(link.path)
-                    ? 'bg-red-950/50 text-red-400 border border-red-800/40'
-                    : 'text-neutral-300 hover:bg-neutral-900 hover:text-white'
+                    ? 'bg-teal-50 text-teal-700 border border-teal-200'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-teal-700'
                 }`}
               >
                 {link.label}
@@ -174,7 +174,7 @@ export const Header: React.FC = () => {
             <Link
               to="/landing"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2.5 rounded text-sm font-medium text-neutral-300 hover:bg-neutral-900"
+              className="px-3 py-2.5 rounded text-sm font-medium text-slate-600 hover:bg-slate-50"
             >
               Ad Campaign Landing Page
             </Link>
@@ -193,14 +193,14 @@ export const Header: React.FC = () => {
             <Link
               to="/admin"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded text-xs text-neutral-500 hover:text-neutral-300 flex items-center gap-1.5"
+              className="px-3 py-2 rounded text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1.5"
             >
               <Shield className="w-3.5 h-3.5" />
               <span>Admin Management Portal</span>
             </Link>
           </div>
 
-          <div className="pt-2 border-t border-neutral-800 flex flex-col gap-2">
+          <div className="pt-2 border-t border-slate-200 flex flex-col gap-2">
             <a
               href={quickWhatsAppUrl}
               target="_blank"
@@ -210,7 +210,7 @@ export const Header: React.FC = () => {
               <MessageCircle className="w-4 h-4" />
               <span>Chat Directly on WhatsApp</span>
             </a>
-            <div className="text-center text-xs text-neutral-500 pt-1">
+            <div className="text-center text-xs text-slate-500 pt-1">
               Main Office: {siteSettings.main_office}
             </div>
           </div>
