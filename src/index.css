@@ -329,3 +329,79 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Final public-storefront contrast pass.
+   Legacy neutral utilities are light brand surfaces.
+   White copy inside those surfaces becomes navy for reliable contrast.
+   Dark brand sections keep their white copy. */
+.public-site .bg-neutral-950 { background-color: #FFFFFF !important; }
+.public-site .bg-neutral-900 { background-color: #F8FCFD !important; }
+.public-site .bg-neutral-800 { background-color: #EAF8FC !important; }
+
+.public-site .bg-neutral-950.text-white,
+.public-site .bg-neutral-900.text-white,
+.public-site .bg-neutral-800.text-white,
+.public-site .bg-neutral-950 .text-white,
+.public-site .bg-neutral-900 .text-white,
+.public-site .bg-neutral-800 .text-white {
+  color: #053F5C !important;
+}
+
+.public-site .bg-neutral-950 .text-neutral-100,
+.public-site .bg-neutral-950 .text-neutral-200,
+.public-site .bg-neutral-950 .text-neutral-300,
+.public-site .bg-neutral-900 .text-neutral-100,
+.public-site .bg-neutral-900 .text-neutral-200,
+.public-site .bg-neutral-900 .text-neutral-300,
+.public-site .bg-neutral-800 .text-neutral-100,
+.public-site .bg-neutral-800 .text-neutral-200,
+.public-site .bg-neutral-800 .text-neutral-300 {
+  color: #053F5C !important;
+}
+
+.public-site .bg-neutral-950 .text-neutral-400,
+.public-site .bg-neutral-950 .text-neutral-500,
+.public-site .bg-neutral-900 .text-neutral-400,
+.public-site .bg-neutral-900 .text-neutral-500,
+.public-site .bg-neutral-800 .text-neutral-400,
+.public-site .bg-neutral-800 .text-neutral-500 {
+  color: #315D70 !important;
+}
+
+.public-site .bg-neutral-950 .hover\:text-white:hover,
+.public-site .bg-neutral-900 .hover\:text-white:hover,
+.public-site .bg-neutral-800 .hover\:text-white:hover {
+  color: #053F5C !important;
+}
+
+.public-site .group:hover .group-hover\:text-red-400,
+.public-site .group:hover .group-hover\:text-red-300 {
+  color: #053F5C !important;
+}
+
+.public-site .bg-brand-navy,
+.public-site .bg-brand-navy.text-white,
+.public-site .bg-brand-navy .text-white {
+  color: #FFFFFF !important;
+}
+.public-site .bg-brand-navy { background-color: #053F5C !important; }
+
+.public-site .bg-teal-700,
+.public-site .bg-teal-700.text-white,
+.public-site .bg-teal-700 .text-white {
+  background-color: #429EBD !important;
+  color: #FFFFFF !important;
+}
+
+.public-site .announcement-popup {
+  background-color: #053F5C !important;
+  color: #FFFFFF !important;
+  border-color: #429EBD !important;
+}
+.public-site .announcement-popup h2,
+.public-site .announcement-popup p,
+.public-site .announcement-popup span,
+.public-site .announcement-popup .text-white {
+  color: #FFFFFF !important;
+}
