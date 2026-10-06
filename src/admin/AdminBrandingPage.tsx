@@ -9,10 +9,12 @@ export const AdminBrandingPage: React.FC = () => {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setErrorMessage(null);
     try {
       await updateBranding(formData);
       await refreshSettings();
@@ -20,6 +22,7 @@ export const AdminBrandingPage: React.FC = () => {
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
       console.error('Error updating branding:', err);
+      setErrorMessage(err instanceof Error ? err.message : 'Unable to save branding settings.');
     } finally {
       setSaving(false);
     }
@@ -29,11 +32,13 @@ export const AdminBrandingPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingField(field);
+    setErrorMessage(null);
     try {
       const url = await uploadFile(file, 'logos');
       setFormData(prev => ({ ...prev, [field]: url }));
     } catch (err) {
       console.error('Logo upload error:', err);
+      setErrorMessage(err instanceof Error ? err.message : 'Image upload failed.');
     } finally {
       setUploadingField(null);
     }
@@ -54,6 +59,13 @@ export const AdminBrandingPage: React.FC = () => {
         <div className="p-3.5 bg-green-950 border border-green-800 rounded flex items-center gap-2 text-green-300 text-xs">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>Branding settings updated successfully!</span>
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="p-3.5 bg-red-50 border border-red-200 rounded flex items-start gap-2 text-red-700 text-xs">
+          <span className="font-semibold">Upload/save failed:</span>
+          <span>{errorMessage}</span>
         </div>
       )}
 
@@ -118,18 +130,30 @@ export const AdminBrandingPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Favicon URL */}
+        {/* Favicon / Site Icon */}
         <div className="space-y-2 pt-2 border-t border-neutral-800">
           <label className="block text-neutral-300 font-semibold uppercase tracking-wider">
-            Browser Favicon URL
+            Browser Favicon / Site Icon
           </label>
-          <input
-            type="text"
-            value={formData.favicon_url || ''}
-            onChange={(e) => setFormData({ ...formData, favicon_url: e.target.value })}
-            placeholder="https://..."
-            className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-2 text-white"
-          />
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={formData.favicon_url || ''}
+              onChange={(e) => setFormData({ ...formData, favicon_url: e.target.value })}
+              placeholder="https://... or Supabase Storage URL"
+              className="flex-1 bg-neutral-950 border border-neutral-700 rounded px-3 py-2 text-white"
+            />
+            <label className="px-3.5 py-2 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded cursor-pointer shrink-0 font-medium">
+              <span>{uploadingField === 'favicon_url' ? 'Uploading...' : 'Upload'}</span>
+              <input
+                type="file"
+                accept="image/png,image/jpeg,image/webp,image/x-icon"
+                onChange={(e) => handleFileUpload('favicon_url', e)}
+                className="hidden"
+              />
+            </label>
+          </div>
+          <p className="text-[11px] text-neutral-500">PNG, JPG, WEBP or ICO. A square image is recommended.</p>
         </div>
 
         <div className="pt-4 border-t border-neutral-800 flex justify-end">
