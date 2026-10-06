@@ -24,12 +24,12 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   const applyThemeVariables = (t: ThemeSettings) => {
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
-    root.style.setProperty('--color-primary', t.primary_color || '#dc2626');
-    root.style.setProperty('--color-primary-hover', t.primary_hover || '#b91c1c');
-    root.style.setProperty('--color-secondary', t.secondary_color || '#171717');
-    root.style.setProperty('--color-accent', t.accent_color || '#ef4444');
-    root.style.setProperty('--color-bg', t.bg_color || '#0a0a0a');
-    root.style.setProperty('--color-text', t.text_color || '#f5f5f5');
+    root.style.setProperty('--color-primary', t.primary_color || '#429EBD');
+    root.style.setProperty('--color-primary-hover', t.primary_hover || '#053F5C');
+    root.style.setProperty('--color-secondary', t.secondary_color || '#053F5C');
+    root.style.setProperty('--color-accent', t.accent_color || '#F7AD19');
+    root.style.setProperty('--color-bg', t.bg_color || '#FFFFFF');
+    root.style.setProperty('--color-text', t.text_color || '#053F5C');
     root.style.setProperty('--app-radius', t.border_radius || '0.375rem');
   };
 
