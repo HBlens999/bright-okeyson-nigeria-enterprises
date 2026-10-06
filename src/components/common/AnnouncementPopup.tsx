@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, MessageCircle, MapPin } from 'lucide-react';
 import { useSettings } from '../../context/SettingsContext';
 
-const POPUP_STORAGE_KEY = 'bo_announcement_seen_v1';
+const POPUP_STORAGE_KEY = 'bo_announcement_seen_v2';
 
 export const AnnouncementPopup: React.FC = () => {
   const { announcement, siteSettings } = useSettings();
@@ -30,7 +30,7 @@ export const AnnouncementPopup: React.FC = () => {
 
     const timer = setTimeout(() => {
       setIsOpen(true);
-    }, announcement.delay || 1500);
+    }, announcement.delay ?? 300);
 
     return () => clearTimeout(timer);
   }, [announcement]);
@@ -60,34 +60,34 @@ export const AnnouncementPopup: React.FC = () => {
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 p-1.5 text-neutral-400 hover:text-white rounded-full bg-neutral-800/80 transition-colors"
+          className="absolute top-4 right-4 p-1.5 text-white hover:text-brand-gold rounded-full bg-white/10 transition-colors"
           aria-label="Close Announcement"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Badge */}
-        <div className="inline-block px-3 py-1 bg-red-600/30 border border-red-500/40 text-red-400 text-xs font-bold uppercase tracking-wider rounded mb-3">
+        <div className="inline-block px-3 py-1 bg-brand-sky border border-brand-teal text-brand-navy text-xs font-bold uppercase tracking-wider rounded mb-3">
           Official Dealership Announcement
         </div>
 
         {/* Title */}
         <h2
           id="welcome-popup-title"
-          className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white font-['Barlow_Condensed'] leading-tight mb-3"
+          className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white font-heading leading-tight mb-3"
         >
           {announcement.title || 'WELCOME TO BRIGHT OKEYSON NIGERIA ENTERPRISES'}
         </h2>
 
         {/* Body Text */}
-        <p className="text-sm text-neutral-300 leading-relaxed mb-5 whitespace-pre-line">
+        <p className="text-sm text-white/95 leading-relaxed mb-5 whitespace-pre-line">
           {announcement.body ||
             'Home of All Motorcycle Healing Center. We are dealers in all kinds of complete motorcycles & spare parts.'}
         </p>
 
         {/* Location Card */}
-        <div className="bg-neutral-950/60 border border-neutral-800 rounded p-3 mb-6 flex items-start gap-2.5 text-xs text-neutral-300">
-          <MapPin className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+        <div className="bg-white/10 border border-white/20 rounded p-3 mb-6 flex items-start gap-2.5 text-xs text-white/90">
+          <MapPin className="w-4 h-4 text-brand-gold shrink-0 mt-0.5" />
           <div>
             <span className="font-semibold text-white block">Main Office:</span>
             <span>{siteSettings.main_office}</span>
@@ -101,14 +101,14 @@ export const AnnouncementPopup: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleClose}
-            className="w-full sm:flex-1 py-3 px-4 bg-green-700 hover:bg-green-600 text-white font-bold text-xs uppercase tracking-wider rounded flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
+            className="w-full sm:flex-1 py-3 px-4 bg-brand-gold hover:bg-white text-brand-navy font-bold text-xs uppercase tracking-wider rounded flex items-center justify-center gap-2 shadow-md transition-all active:scale-95"
           >
             <MessageCircle className="w-4 h-4" />
             <span>{announcement.button_text || 'Chat on WhatsApp'}</span>
           </a>
           <button
             onClick={handleClose}
-            className="w-full sm:w-auto py-3 px-5 bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white font-semibold text-xs uppercase tracking-wider rounded transition-colors"
+            className="w-full sm:w-auto py-3 px-5 bg-white/10 hover:bg-white text-white hover:text-brand-navy font-semibold text-xs uppercase tracking-wider rounded transition-colors"
           >
             Continue to Site
           </button>
