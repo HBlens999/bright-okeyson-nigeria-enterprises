@@ -110,16 +110,46 @@ export async function getBranding(): Promise<BrandingSettings> {
 
 export async function updateBranding(branding: Partial<BrandingSettings>): Promise<BrandingSettings> {
   const current = await getBranding();
-  const updated = { ...current, ...branding, updated_at: new Date().toISOString() };
+  const id = isValidUUID(branding.id) ? branding.id : (isValidUUID(current.id) ? current.id : null);
+  const updated = {
+    ...current,
+    ...branding,
+    ...(id ? { id } : {}),
+    updated_at: new Date().toISOString()
+  };
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const { error } = await supabase.from('branding').upsert(updated);
-      if (error) console.error('Supabase update branding error:', error.message);
+      const payload = {
+        id: updated.id,
+        logo_url: updated.logo_url || null,
+        logo_light_url: updated.logo_light_url || null,
+        logo_dark_url: updated.logo_dark_url || null,
+        favicon_url: updated.favicon_url || null,
+        footer_logo_url: updated.footer_logo_url || null,
+        brand_symbol_text: updated.brand_symbol_text || 'BONE',
+        updated_at: updated.updated_at
+      };
+
+      const { data, error } = await supabase
+        .from('branding')
+        .upsert(payload, { onConflict: 'id' })
+        .select('*')
+        .single();
+
+      if (error) {
+        console.error('Supabase update branding error:', error);
+        throw new Error(error.message);
+      }
+
+      if (!data) throw new Error('Supabase saved no branding record.');
+      return data as BrandingSettings;
     } catch (e) {
       console.error('Supabase update branding exception:', e);
+      throw e instanceof Error ? e : new Error('Unable to save branding settings.');
     }
   }
+
   return updated;
 }
 
