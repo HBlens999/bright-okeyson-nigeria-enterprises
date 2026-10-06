@@ -38,12 +38,9 @@
   .hover\:border-red-700:hover,
   .hover\:border-red-800:hover { border-color: var(--color-primary-hover) !important; }
   .bg-red-950 { background-color: color-mix(in srgb, var(--color-primary) 8%, white) !important; }
-  .bg-neutral-950 { background-color: #FFFFFF !important; }
-  .bg-neutral-900 { background-color: #F1F5F4 !important; }
+    .bg-neutral-900 { background-color: #F1F5F4 !important; }
   .bg-neutral-800 { background-color: #E8EFEE !important; }
-  .bg-black { background-color: #FFFFFF !important; }
-  .text-white { color: var(--color-text) !important; }
-  .text-neutral-100 { color: #1A2940 !important; }
+      .text-neutral-100 { color: #1A2940 !important; }
   .text-neutral-200 { color: #25364D !important; }
   .text-neutral-300 { color: #40526A !important; }
   .text-neutral-400 { color: #5E6E83 !important; }
@@ -68,3 +65,11 @@
   a, button { transition: color .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
   button:hover:not(:disabled) { transform: translateY(-1px); }
 }
+
+/* Light storefront + protected hero contrast */
+.hero-slider { background: #111827; color: #fff; }
+.hero-slider .bg-neutral-950 { background-color: #111827 !important; }
+.hero-slider .text-white { color: #fff !important; }
+.hero-slider .text-neutral-300 { color: #E5E7EB !important; }
+.hero-slider .bg-neutral-900\/90 { background-color: rgba(17,24,39,.90) !important; }
+.hero-slider .border-neutral-700 { border-color: rgba(255,255,255,.25) !important; }
