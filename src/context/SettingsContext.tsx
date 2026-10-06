@@ -21,6 +21,20 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
   const [loading, setLoading] = useState(false);
 
+  const applyFavicon = (url?: string | null) => {
+    if (typeof document === 'undefined') return;
+    const head = document.head;
+    const existing = head.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[data-bright-okeyson-favicon="true"]');
+    existing.forEach((node) => node.remove());
+    if (!url) return;
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.type = url.toLowerCase().includes('.ico') ? 'image/x-icon' : 'image/png';
+    link.href = url + (url.includes('?') ? '&' : '?') + 'v=' + Date.now();
+    link.setAttribute('data-bright-okeyson-favicon', 'true');
+    head.appendChild(link);
+  };
+
   const applyThemeVariables = (t: ThemeSettings) => {
     if (typeof document === 'undefined') return;
     const root = document.documentElement;
@@ -41,6 +55,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       ]);
       setSiteSettings(s); setBranding(b); setBranches(br); setTheme(t); setAnnouncement(a); setCategories(c);
       applyThemeVariables(t);
+      applyFavicon(b.favicon_url);
     } catch (err) {
       console.warn('Error loading site settings:', err);
     } finally {
