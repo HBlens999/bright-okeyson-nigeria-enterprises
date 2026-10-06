@@ -51,7 +51,7 @@ export const AnnouncementPopup: React.FC = () => {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
     >
       <div
-        className="relative w-full max-w-lg bg-neutral-900 border border-neutral-700 rounded-lg shadow-2xl overflow-hidden p-6 sm:p-8 animate-scale-in"
+        className="announcement-popup relative w-full max-w-lg bg-brand-navy border border-brand-teal rounded-lg shadow-2xl overflow-hidden p-6 sm:p-8 animate-scale-in"
         style={{
           backgroundColor: announcement.background_color || '#171717',
           color: announcement.text_color || '#ffffff'
