@@ -94,7 +94,7 @@ export const HeroSlider: React.FC = () => {
   const activeSlide = slides[currentIndex] || slides[0];
 
   return (
-    <section className="relative bg-neutral-950 text-white overflow-hidden min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] flex items-center border-b border-neutral-800 select-none">
+    <section className="hero-slider relative bg-neutral-950 text-white overflow-hidden min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] flex items-center border-b border-neutral-800 select-none">
       {/* Background Images */}
       {slides.map((slide, idx) => {
         const isCurrent = idx === currentIndex;
