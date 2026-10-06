@@ -998,30 +998,45 @@ export async function saveNavigationItems(items: NavigationItem[]): Promise<Navi
 // FILE UPLOAD (Supabase Storage)
 // ------------------------------------------------------------------------------
 export async function uploadFile(file: File, bucket = 'product-images'): Promise<string> {
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const ext = file.name.split('.').pop();
-      const filename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${ext}`;
-      const { data, error } = await supabase.storage.from(bucket).upload(filename, file, {
-        cacheControl: '3600',
-        upsert: false
-      });
-      if (!error && data) {
-        const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(filename);
-        return publicUrlData.publicUrl;
-      }
-    } catch (e) {
-      console.warn('Supabase storage upload error, falling back to data URL:', e);
-    }
+  if (!file || !file.type.startsWith('image/')) {
+    throw new Error('Please select a valid image file.');
   }
 
-  // Fallback: Read as base64 DataURL
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+  // Keep browser uploads lightweight and prevent accidental huge base64 payloads.
+  const maxSize = 10 * 1024 * 1024;
+  if (file.size > maxSize) {
+    throw new Error('Image is too large. Please use an image smaller than 10MB.');
+  }
+
+  if (!isSupabaseConfigured || !supabase) {
+    throw new Error('Supabase Storage is not configured.');
+  }
+
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  const safeExt = /^[a-z0-9]+$/.test(ext) ? ext : 'jpg';
+  const filename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${safeExt}`;
+
+  try {
+    const { data, error } = await supabase.storage.from(bucket).upload(filename, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type
+    });
+
+    if (error || !data?.path) {
+      throw new Error(error?.message || `Upload to "${bucket}" failed.`);
+    }
+
+    const { data: publicUrlData } = supabase.storage.from(bucket).getPublicUrl(data.path);
+    if (!publicUrlData?.publicUrl) {
+      throw new Error('Upload succeeded but Supabase did not return a public URL.');
+    }
+
+    return publicUrlData.publicUrl;
+  } catch (error) {
+    console.error(`Supabase storage upload failed [${bucket}]:`, error);
+    throw error instanceof Error ? error : new Error('Image upload failed.');
+  }
 }
 
 // ------------------------------------------------------------------------------
