@@ -60,6 +60,23 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Manager Profile (content managed in Admin > Business Information) */}
+        {(siteSettings.manager_name || siteSettings.manager_image_url || siteSettings.manager_bio) && (
+          <section className="bg-neutral-900 border border-neutral-800 rounded p-6 sm:p-8">
+            <div className="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-6 items-center">
+              {siteSettings.manager_image_url && (
+                <img src={siteSettings.manager_image_url} alt={siteSettings.manager_name ? `${siteSettings.manager_name}, manager` : 'Business manager'} className="w-full max-w-[220px] aspect-[4/5] object-cover rounded border border-neutral-800 mx-auto sm:mx-0" loading="lazy" decoding="async" />
+              )}
+              <div className="space-y-3">
+                <div className="text-xs font-bold uppercase tracking-widest text-red-500">Meet the Manager</div>
+                {siteSettings.manager_name && <h2 className="text-2xl font-bold uppercase font-['Barlow_Condensed'] text-white">{siteSettings.manager_name}</h2>}
+                {siteSettings.manager_title && <p className="text-sm font-semibold text-neutral-200">{siteSettings.manager_title}</p>}
+                {siteSettings.manager_bio && <p className="text-sm text-neutral-300 leading-relaxed whitespace-pre-line">{siteSettings.manager_bio}</p>}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Authorized Brands We Deal In */}
         <div className="space-y-4">
           <h2 className="text-xl font-bold uppercase font-['Barlow_Condensed'] text-white">
