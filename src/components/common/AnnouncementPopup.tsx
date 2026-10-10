@@ -39,6 +39,8 @@ export const AnnouncementPopup: React.FC = () => {
     setIsOpen(false);
     localStorage.setItem(POPUP_STORAGE_KEY, Date.now().toString());
     sessionStorage.setItem(POPUP_STORAGE_KEY, 'true');
+    // Trigger the promotional player from the visitor's close-button interaction.
+    window.dispatchEvent(new CustomEvent('bo-announcement-closed'));
   };
 
   if (!isOpen || !announcement || !announcement.is_enabled) return null;
