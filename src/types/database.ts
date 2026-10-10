@@ -24,6 +24,10 @@ export interface SiteSettings {
   whatsapp_pulse: boolean;
   whatsapp_enabled: boolean;
   whatsapp_template: string;
+  manager_name: string;
+  manager_title: string;
+  manager_bio: string;
+  manager_image_url: string;
   created_at?: string;
   updated_at?: string;
 }
