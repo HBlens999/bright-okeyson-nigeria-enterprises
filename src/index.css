@@ -405,3 +405,70 @@
 .public-site .announcement-popup .text-white {
   color: #FFFFFF !important;
 }
+
+
+/* Hero readability + working admin-selected slide transitions (scoped to hero only). */
+.public-site .hero-slider .hero-slide-content { text-shadow: none !important; }
+.public-site .hero-slider .hero-slide-title,
+.public-site .hero-slider .hero-slide-subtitle {
+  color: #FFFFFF !important;
+  text-shadow: none !important;
+  max-width: min(100%, 52rem);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.public-site .hero-slider .hero-slide-title {
+  background: rgba(5, 63, 92, 0.94) !important;
+  padding: .12em .22em .16em !important;
+  border-radius: .12rem;
+  box-shadow: 0 4px 18px rgba(0,0,0,.2);
+}
+.public-site .hero-slider .hero-slide-subtitle {
+  background: rgba(5, 63, 92, 0.90) !important;
+  padding: .45rem .7rem !important;
+  border-radius: .2rem;
+  box-shadow: 0 3px 14px rgba(0,0,0,.18);
+}
+.public-site .hero-slider .hero-slide-layer {
+  transition: none !important;
+}
+.public-site .hero-slider .hero-slide-layer.hero-slide-active {
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(.22,.61,.36,1);
+  animation-fill-mode: both;
+}
+.public-site .hero-slider .hero-slide-layer.hero-transition-fade.hero-slide-active,
+.public-site .hero-slider .hero-slide-layer.hero-transition-crossfade.hero-slide-active {
+  animation-name: brightHeroFadeIn !important;
+}
+.public-site .hero-slider .hero-slide-layer.hero-transition-slide.hero-slide-active {
+  animation-name: brightHeroSlideIn !important;
+}
+.public-site .hero-slider .hero-slide-layer.hero-transition-zoom.hero-slide-active {
+  animation-name: brightHeroZoomIn !important;
+}
+.public-site .hero-slider .hero-slide-layer.hero-transition-zoom .hero-slide-image {
+  animation: brightHeroImageZoom 5s ease-out both;
+}
+@keyframes brightHeroFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes brightHeroSlideIn {
+  from { opacity: .55; transform: translateX(3%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes brightHeroZoomIn {
+  from { opacity: .55; transform: scale(1.035); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes brightHeroImageZoom {
+  from { transform: scale(1.07); }
+  to { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .public-site .hero-slider .hero-slide-layer.hero-slide-active,
+  .public-site .hero-slider .hero-slide-layer.hero-transition-zoom .hero-slide-image {
+    animation: none !important;
+  }
+}
