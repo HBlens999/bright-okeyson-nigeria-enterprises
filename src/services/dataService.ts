@@ -1114,6 +1114,28 @@ export async function uploadFile(file: File, bucket = 'product-images'): Promise
   }
 }
 
+/**
+ * Upload a short promotional video to the existing public storage bucket.
+ */
+export async function uploadPromoVideo(file: File): Promise<string> {
+  if (!file || !/^video\/(mp4|webm|quicktime)$/i.test(file.type)) {
+    throw new Error('Please choose an MP4, WebM, or MOV video.');
+  }
+  if (file.size > 50 * 1024 * 1024) {
+    throw new Error('The video must be 50 MB or smaller. MP4 is recommended for Android.');
+  }
+  if (!isSupabaseConfigured || !supabase) throw new Error('Supabase Storage is not configured.');
+  const ext = file.type === 'video/webm' ? 'webm' : file.type === 'video/quicktime' ? 'mov' : 'mp4';
+  const filename = `promo-video-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { data, error } = await supabase.storage.from('product-images').upload(filename, file, {
+    cacheControl: '3600', upsert: false, contentType: file.type
+  });
+  if (error || !data?.path) throw new Error(error?.message || 'Video upload failed. Check storage permissions.');
+  const { data: publicData } = supabase.storage.from('product-images').getPublicUrl(data.path);
+  if (!publicData?.publicUrl) throw new Error('Uploaded video URL could not be created.');
+  return publicData.publicUrl;
+}
+
 // ------------------------------------------------------------------------------
 // DASHBOARD REAL-TIME METRICS
 // ------------------------------------------------------------------------------
