@@ -28,6 +28,8 @@ export interface SiteSettings {
   manager_title: string;
   manager_bio: string;
   manager_image_url: string;
+  promo_video_url: string;
+  promo_video_enabled: boolean;
   created_at?: string;
   updated_at?: string;
 }
