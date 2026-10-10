@@ -239,15 +239,32 @@
   text-shadow: 0 2px 14px rgba(255, 255, 255, 0.45);
 }
 
-.public-site .hero-slider .hero-slide-title {
-  color: #053F5C !important;
-  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.65);
+.hero-slider .hero-slide-title {
+  color: #FFFFFF !important;
+  background: #053F5C !important;
+  background-color: #053F5C !important;
+  padding: 0.14em 0.24em 0.18em !important;
+  border-radius: 0.18rem;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  text-shadow: none !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
 }
 
-.public-site .hero-slider .hero-slide-subtitle {
-  color: #053F5C !important;
-  text-shadow: 0 1px 8px rgba(255, 255, 255, 0.7);
+.hero-slider .hero-slide-subtitle {
+  display: inline-block;
+  color: #FFFFFF !important;
+  background: rgba(5, 63, 92, 0.96) !important;
+  background-color: rgba(5, 63, 92, 0.96) !important;
+  padding: 0.5rem 0.8rem !important;
+  border-radius: 0.2rem;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  text-shadow: none !important;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.24);
 }
+
+/* The hero title/subtitle contrast applies regardless of the storefront wrapper class. */
 
 .public-site .hero-slider .hero-badge {
   background: #9FE7F5 !important;
