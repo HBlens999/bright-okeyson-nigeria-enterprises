@@ -95,6 +95,23 @@ export const ContactPage: React.FC = () => {
               </a>
             </div>
 
+            {/* Manager Profile (content managed in Admin > Business Information) */}
+            {(siteSettings.manager_name || siteSettings.manager_image_url || siteSettings.manager_bio) && (
+              <section className="bg-neutral-900 border border-neutral-800 rounded p-5">
+                <div className="flex items-start gap-4">
+                  {siteSettings.manager_image_url && (
+                    <img src={siteSettings.manager_image_url} alt={siteSettings.manager_name ? `${siteSettings.manager_name}, manager` : 'Business manager'} className="w-24 h-28 sm:w-28 sm:h-32 object-cover rounded border border-neutral-800 shrink-0" loading="lazy" decoding="async" />
+                  )}
+                  <div className="space-y-1.5 min-w-0">
+                    <div className="text-[11px] font-bold uppercase tracking-widest text-red-500">Meet the Manager</div>
+                    {siteSettings.manager_name && <h2 className="text-lg font-bold uppercase font-['Barlow_Condensed'] text-white">{siteSettings.manager_name}</h2>}
+                    {siteSettings.manager_title && <p className="text-xs font-semibold text-neutral-200">{siteSettings.manager_title}</p>}
+                    {siteSettings.manager_bio && <p className="text-xs text-neutral-300 leading-relaxed whitespace-pre-line">{siteSettings.manager_bio}</p>}
+                  </div>
+                </div>
+              </section>
+            )}
+
             {/* Branches List */}
             <div className="space-y-4">
               <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-300">
