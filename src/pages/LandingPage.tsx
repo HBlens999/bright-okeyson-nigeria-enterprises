@@ -151,11 +151,12 @@ export const LandingPage: React.FC = () => {
           <img
             src={landingPage.hero_image || '/src/assets/images/hero_motorcycle_dealership_1791203249649.jpg'}
             alt={landingPage.title}
-            className="w-full h-full object-cover opacity-25"
+            className="w-full h-full object-cover opacity-100"
             loading="eager"
             fetchPriority="high"
+            decoding="async"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/80 to-neutral-950/90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/75 via-neutral-950/15 to-neutral-950/10" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center space-y-6">
