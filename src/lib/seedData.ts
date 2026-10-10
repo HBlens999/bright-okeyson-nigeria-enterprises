@@ -28,7 +28,11 @@ export const INITIAL_SITE_SETTINGS: SiteSettings = {
   whatsapp_position: 'bottom-right',
   whatsapp_pulse: true,
   whatsapp_enabled: true,
-  whatsapp_template: `Hello Bright Okeyson Nigeria Enterprises,\n\nI would like to inquire about the following products:\n\n{ITEMS}\n\nPlease provide current prices and availability.\n\nName: {NAME}\nPhone: {PHONE}\nLocation: {LOCATION}\n\nThank you.`
+  whatsapp_template: `Hello Bright Okeyson Nigeria Enterprises,\n\nI would like to inquire about the following products:\n\n{ITEMS}\n\nPlease provide current prices and availability.\n\nName: {NAME}\nPhone: {PHONE}\nLocation: {LOCATION}\n\nThank you.`,
+  manager_name: '',
+  manager_title: '',
+  manager_bio: '',
+  manager_image_url: ''
 };
 
 export const INITIAL_BRANDING: BrandingSettings = {
