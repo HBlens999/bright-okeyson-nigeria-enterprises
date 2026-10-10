@@ -1032,25 +1032,59 @@ export async function uploadFile(file: File, bucket = 'product-images'): Promise
     throw new Error('Please select a valid image file.');
   }
 
-  // Keep browser uploads lightweight and prevent accidental huge base64 payloads.
-  const maxSize = 10 * 1024 * 1024;
+  const maxSize = 20 * 1024 * 1024;
   if (file.size > maxSize) {
-    throw new Error('Image is too large. Please use an image smaller than 10MB.');
+    throw new Error('Image is too large. Please use an image smaller than 20MB.');
   }
 
   if (!isSupabaseConfigured || !supabase) {
     throw new Error('Supabase Storage is not configured.');
   }
 
-  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+  // Compress large raster images in-browser before uploading. Keep small files as-is;
+  // SVGs and GIFs are preserved because canvas conversion can damage their behavior.
+  let uploadFile = file;
+  const isCompressible = /^(image\/jpeg|image\/png|image\/webp)$/i.test(file.type);
+  if (isCompressible && file.size > 450 * 1024 && typeof createImageBitmap === 'function') {
+    try {
+      const bitmap = await createImageBitmap(file);
+      const maxDimension = bucket === 'hero-images' ? 1920 : 1600;
+      const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        const blob = await new Promise<Blob | null>((resolve) =>
+          canvas.toBlob(resolve, 'image/webp', 0.84)
+        );
+        if (blob && blob.size < file.size) {
+          const baseName = file.name.replace(/\.[^.]+$/, '') || 'image';
+          uploadFile = new File([blob], `${baseName}.webp`, {
+            type: 'image/webp',
+            lastModified: Date.now()
+          });
+        }
+      }
+      bitmap.close();
+    } catch (compressionError) {
+      // If a browser cannot decode/encode this image, safely upload the original.
+      console.warn('Image compression skipped; uploading original image.', compressionError);
+    }
+  }
+
+  const ext = uploadFile.type === 'image/webp'
+    ? 'webp'
+    : (uploadFile.name.split('.').pop()?.toLowerCase() || 'jpg');
   const safeExt = /^[a-z0-9]+$/.test(ext) ? ext : 'jpg';
   const filename = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${safeExt}`;
 
   try {
-    const { data, error } = await supabase.storage.from(bucket).upload(filename, file, {
+    const { data, error } = await supabase.storage.from(bucket).upload(filename, uploadFile, {
       cacheControl: '3600',
       upsert: false,
-      contentType: file.type
+      contentType: uploadFile.type
     });
 
     if (error || !data?.path) {
