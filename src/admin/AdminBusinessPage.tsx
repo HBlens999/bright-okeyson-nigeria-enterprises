@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
-import { updateSiteSettings, uploadFile } from '../services/dataService';
+import { updateSiteSettings, uploadFile, uploadPromoVideo } from '../services/dataService';
 import { CheckCircle2, Plus, Trash2 } from 'lucide-react';
 
 export const AdminBusinessPage: React.FC = () => {
@@ -10,6 +10,7 @@ export const AdminBusinessPage: React.FC = () => {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingManagerImage, setUploadingManagerImage] = useState(false);
+  const [uploadingPromoVideo, setUploadingPromoVideo] = useState(false);
   const [saveError, setSaveError] = useState('');
 
   // Site settings load asynchronously. Keep the form in sync with the saved database row.
@@ -45,6 +46,20 @@ export const AdminBusinessPage: React.FC = () => {
       window.alert(err instanceof Error ? err.message : 'Could not upload manager photo.');
     } finally {
       setUploadingManagerImage(false);
+    }
+  };
+
+  const handlePromoVideoUpload = async (file?: File) => {
+    if (!file) return;
+    setUploadingPromoVideo(true);
+    try {
+      const videoUrl = await uploadPromoVideo(file);
+      setFormData(prev => ({ ...prev, promo_video_url: videoUrl, promo_video_enabled: true }));
+    } catch (err) {
+      console.error('Promotional video upload failed:', err);
+      window.alert(err instanceof Error ? err.message : 'Could not upload promotional video.');
+    } finally {
+      setUploadingPromoVideo(false);
     }
   };
 
@@ -202,6 +217,30 @@ export const AdminBusinessPage: React.FC = () => {
               </div>
             )}
           </div>
+        </div>
+
+        {/* Floating Promotional Video */}
+        <div className="space-y-4 pt-4 border-t border-neutral-800">
+          <div>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-200">Floating Promotional Video</h2>
+            <p className="text-[11px] text-neutral-400 mt-1">Shows after a visitor closes the welcome announcement. MP4 recommended; maximum 50 MB.</p>
+          </div>
+          <label className="flex items-center justify-between gap-4 rounded border border-neutral-800 bg-neutral-950 p-3">
+            <span><span className="block text-xs font-bold text-white">Enable floating video</span><span className="block text-[11px] text-neutral-400 mt-1">Show the uploaded video after announcement dismissal</span></span>
+            <input type="checkbox" checked={Boolean(formData.promo_video_enabled)} onChange={(e) => setFormData({ ...formData, promo_video_enabled: e.target.checked })} className="h-4 w-4 accent-emerald-600" />
+          </label>
+          <div>
+            <label className="block text-neutral-300 font-semibold mb-1 uppercase tracking-wider">Upload Video (MP4 / WebM / MOV)</label>
+            <input type="file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" disabled={uploadingPromoVideo} onChange={(e) => { const file = e.target.files?.[0]; void handlePromoVideoUpload(file); e.currentTarget.value = ''; }} className="block w-full text-xs text-neutral-300 file:mr-3 file:rounded file:border-0 file:bg-neutral-800 file:px-3 file:py-2 file:text-white" />
+            <p className="text-[11px] text-neutral-400 mt-1">{uploadingPromoVideo ? 'Uploading video… keep this page open.' : 'Use a compressed 15-second MP4, ideally under 20 MB.'}</p>
+          </div>
+          {formData.promo_video_url && (
+            <div className="space-y-3 rounded border border-neutral-800 bg-neutral-950 p-3">
+              <video src={formData.promo_video_url} controls playsInline preload="metadata" className="w-full max-w-lg rounded bg-black aspect-video" />
+              <p className="break-all text-[11px] text-neutral-400">Click Save Business Information below to publish the video.</p>
+              <button type="button" onClick={() => setFormData({ ...formData, promo_video_url: '', promo_video_enabled: false })} className="text-xs font-semibold text-red-400 hover:text-red-300">Remove video</button>
+            </div>
+          )}
         </div>
 
         {/* Official Telephone Lines */}
