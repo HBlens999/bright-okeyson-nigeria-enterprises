@@ -32,7 +32,9 @@ export const INITIAL_SITE_SETTINGS: SiteSettings = {
   manager_name: '',
   manager_title: '',
   manager_bio: '',
-  manager_image_url: ''
+  manager_image_url: '',
+  promo_video_url: '',
+  promo_video_enabled: false
 };
 
 export const INITIAL_BRANDING: BrandingSettings = {
