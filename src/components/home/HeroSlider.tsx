@@ -132,7 +132,7 @@ export const HeroSlider: React.FC = () => {
         return (
           <div
             key={slide.id}
-            className={`hero-slide-layer absolute inset-0 ${isCurrent ? 'block z-10' : 'hidden z-0'}`}
+            className={`hero-slide-layer absolute inset-0 ${isCurrent ? 'block z-10' : 'hidden z-0'} hero-transition-${slide.transition || 'fade'} ${isCurrent ? 'hero-slide-active' : ''}`}
             aria-hidden={!isCurrent}
           >
             <picture>
@@ -171,12 +171,12 @@ export const HeroSlider: React.FC = () => {
               </div>
             )}
 
-            <h1 className="hero-slide-title text-3xl sm:text-5xl lg:text-6xl font-black uppercase font-heading tracking-tight leading-[0.95] text-brand-navy text-balance">
+            <h1 className="hero-slide-title inline-block text-3xl sm:text-5xl lg:text-6xl font-black uppercase font-heading tracking-tight leading-[0.95] text-white text-balance bg-brand-navy/90 px-3 py-2 rounded-sm shadow-lg">
               {activeSlide.title}
             </h1>
 
             {activeSlide.subtitle && (
-              <p className="hero-slide-subtitle text-base sm:text-lg lg:text-xl font-medium leading-relaxed max-w-2xl text-brand-navy">
+              <p className="hero-slide-subtitle inline-block text-base sm:text-lg lg:text-xl font-semibold leading-relaxed max-w-2xl text-white bg-brand-navy/90 px-3 py-2 rounded-sm shadow-md">
                 {activeSlide.subtitle}
               </p>
             )}
