@@ -73,15 +73,26 @@ export async function updateSiteSettings(settings: Partial<SiteSettings>): Promi
   const current = await getSiteSettings();
   const updated = { ...current, ...settings, updated_at: new Date().toISOString() };
 
-  if (isSupabaseConfigured && supabase) {
-    try {
-      const { error } = await supabase.from('site_settings').upsert(updated);
-      if (error) console.error('Supabase update site_settings error:', error.message);
-    } catch (e) {
-      console.error('Supabase update site_settings exception:', e);
-    }
+  if (!isSupabaseConfigured || !supabase) {
+    throw new Error('Database connection is not configured. Changes were not saved.');
   }
-  return updated;
+
+  const { data, error } = await supabase
+    .from('site_settings')
+    .upsert(updated, { onConflict: 'id' })
+    .select('*')
+    .single();
+
+  if (error) {
+    console.error('Supabase update site_settings error:', error.message);
+    throw new Error(error.message || 'Database rejected the business information update.');
+  }
+
+  if (!data) {
+    throw new Error('The database did not confirm the save. Please try again.');
+  }
+
+  return data as SiteSettings;
 }
 
 // ------------------------------------------------------------------------------
