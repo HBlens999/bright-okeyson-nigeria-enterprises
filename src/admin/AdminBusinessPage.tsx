@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
 import { updateSiteSettings, uploadFile } from '../services/dataService';
 import { CheckCircle2, Plus, Trash2 } from 'lucide-react';
@@ -10,10 +10,17 @@ export const AdminBusinessPage: React.FC = () => {
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingManagerImage, setUploadingManagerImage] = useState(false);
+  const [saveError, setSaveError] = useState('');
+
+  // Site settings load asynchronously. Keep the form in sync with the saved database row.
+  useEffect(() => {
+    setFormData(siteSettings);
+  }, [siteSettings]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setSaveError('');
     try {
       await updateSiteSettings(formData);
       await refreshSettings();
@@ -21,6 +28,7 @@ export const AdminBusinessPage: React.FC = () => {
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
       console.error('Error updating business settings:', err);
+      setSaveError(err instanceof Error ? err.message : 'Could not save business information. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -71,6 +79,11 @@ export const AdminBusinessPage: React.FC = () => {
         <div className="p-3.5 bg-green-950 border border-green-800 rounded flex items-center gap-2 text-green-300 text-xs">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           <span>Business information updated across public website!</span>
+        </div>
+      )}
+      {saveError && (
+        <div role="alert" className="p-3.5 bg-red-950 border border-red-800 rounded text-red-200 text-xs">
+          Business information could not be saved: {saveError}
         </div>
       )}
 
