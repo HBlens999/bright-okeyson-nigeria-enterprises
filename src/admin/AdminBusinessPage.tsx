@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSettings } from '../context/SettingsContext';
-import { updateSiteSettings } from '../services/dataService';
+import { updateSiteSettings, uploadFile } from '../services/dataService';
 import { CheckCircle2, Plus, Trash2 } from 'lucide-react';
 
 export const AdminBusinessPage: React.FC = () => {
@@ -9,6 +9,7 @@ export const AdminBusinessPage: React.FC = () => {
   const [newPhone, setNewPhone] = useState('');
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingManagerImage, setUploadingManagerImage] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,20 @@ export const AdminBusinessPage: React.FC = () => {
       console.error('Error updating business settings:', err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleManagerImageUpload = async (file?: File) => {
+    if (!file) return;
+    setUploadingManagerImage(true);
+    try {
+      const imageUrl = await uploadFile(file, 'product-images');
+      setFormData(prev => ({ ...prev, manager_image_url: imageUrl }));
+    } catch (err) {
+      console.error('Manager photo upload failed:', err);
+      window.alert(err instanceof Error ? err.message : 'Could not upload manager photo.');
+    } finally {
+      setUploadingManagerImage(false);
     }
   };
 
@@ -138,6 +153,42 @@ export const AdminBusinessPage: React.FC = () => {
             onChange={(e) => setFormData({ ...formData, main_office: e.target.value })}
             className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-2 text-white font-medium"
           />
+        </div>
+
+        {/* Manager Profile - optional public About and Contact page section */}
+        <div className="space-y-4 pt-4 border-t border-neutral-800">
+          <div>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-neutral-200">Manager Profile (Optional)</h2>
+            <p className="text-[11px] text-neutral-400 mt-1">These details appear on the public About Us and Contact pages. Leave fields empty to hide the manager profile.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-neutral-300 font-semibold mb-1 uppercase tracking-wider">Manager Name</label>
+              <input type="text" value={formData.manager_name || ''} onChange={(e) => setFormData({ ...formData, manager_name: e.target.value })} placeholder="Enter manager's name" className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-2 text-white" />
+            </div>
+            <div>
+              <label className="block text-neutral-300 font-semibold mb-1 uppercase tracking-wider">Job Title</label>
+              <input type="text" value={formData.manager_title || ''} onChange={(e) => setFormData({ ...formData, manager_title: e.target.value })} placeholder="e.g. Manager" className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-2 text-white" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-neutral-300 font-semibold mb-1 uppercase tracking-wider">Manager Bio / Information</label>
+            <textarea rows={3} value={formData.manager_bio || ''} onChange={(e) => setFormData({ ...formData, manager_bio: e.target.value })} placeholder="Enter the manager's approved biography or introduction" className="w-full bg-neutral-950 border border-neutral-700 rounded px-3 py-2 text-white" />
+          </div>
+          <div>
+            <label className="block text-neutral-300 font-semibold mb-1 uppercase tracking-wider">Manager Photo</label>
+            <input type="file" accept="image/*" disabled={uploadingManagerImage} onChange={(e) => { const file = e.target.files?.[0]; void handleManagerImageUpload(file); e.currentTarget.value = ''; }} className="block w-full text-xs text-neutral-300 file:mr-3 file:rounded file:border-0 file:bg-neutral-800 file:px-3 file:py-2 file:text-white" />
+            <p className="text-[11px] text-neutral-400 mt-1">{uploadingManagerImage ? 'Uploading and optimizing photo…' : 'Upload a photo. It will be optimized when possible before storage.'}</p>
+            {formData.manager_image_url && (
+              <div className="mt-3 flex items-start gap-3">
+                <img src={formData.manager_image_url} alt="Manager preview" className="w-24 h-28 object-cover rounded border border-neutral-700" />
+                <div className="space-y-2">
+                  <span className="block text-[11px] text-green-300">Photo ready. Save business information to publish it.</span>
+                  <button type="button" onClick={() => setFormData({ ...formData, manager_image_url: '' })} className="text-xs text-red-400 hover:text-red-300">Remove photo</button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Official Telephone Lines */}
